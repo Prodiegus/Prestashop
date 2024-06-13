@@ -1,0 +1,12 @@
+FROM prestashop/prestashop:latest
+
+ENV DB_SERVER=db:3306
+ENV DB_NAME=prestashop
+ENV DB_USER=prestashopuser
+ENV DB_PASSWORD=password
+ENV PS_INSTALL_AUTO=1
+ENV PS_ERASE_DB=1
+ENV PS_FOLDER_ADMIN=admin
+ENV PS_FOLDER_INSTALL=install
+
+EXPOSE 80
