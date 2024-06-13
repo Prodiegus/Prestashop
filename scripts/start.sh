@@ -30,7 +30,7 @@ then
 fi
 
 echo "Haciendo ejecutables los archivos en la carpeta scripts..."
-chmod +x ~/Prestashop/scripts/*
+sudo chmod +x ~/Prestashop/scripts/*
 
 echo "Cambiando la propiedad de los directorios de los volúmenes..."
 sudo chown -R $USER:$USER ~/Prestashop/data/prestashop
@@ -45,13 +45,13 @@ orig_dir=$(pwd)
 
 echo "Iniciando contenedores de Docker..."
 cd ~/Prestashop
-docker-compose up -d
+sudo docker-compose up -d
 
 echo "Programando la actualización de los contenedores..."
-(crontab -l ; echo "0 5 * * 1 ~/Prestashop/scripts/update_containers.sh") | crontab -
+sudo (crontab -l ; echo "0 5 * * 1 ~/Prestashop/scripts/update_containers.sh") | crontab -
 
 echo "Programando el respaldo de la base de datos..."
-(crontab -l ; echo "55 23 * * * ~/Prestashop/scripts/backup_db.sh") | crontab -
+sudo (crontab -l ; echo "55 23 * * * ~/Prestashop/scripts/backup_db.sh") | crontab -
 
 echo "Configuración completada."
 
