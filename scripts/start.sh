@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo apt-get update
+
 if ! command -v git &> /dev/null
 then
     echo "Git no está instalado. Instalando..."
@@ -15,6 +16,10 @@ if ! command -v docker &> /dev/null
 then
     echo "Docker no está instalado. Instalando..."
     sudo apt-get install -y docker.io
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    sudo usermod -aG docker $USER
+    newgrp docker
 fi
 
 if ! command -v docker-compose &> /dev/null
@@ -31,14 +36,23 @@ echo "Cambiando la propiedad de los directorios de los volúmenes..."
 sudo chown -R $USER:$USER ~/Prestashop/data/prestashop
 sudo chown -R $USER:$USER ~/Prestashop/data/prestashop_DB
 
-# Iniciar los contenedores de Docker
+if ! docker network ls | grep -q 'prestashop_network'; then
+    echo "Creando la red de Docker prestashop_network..."
+    docker network create prestashop_network
+fi
+
+orig_dir=$(pwd)
+
 echo "Iniciando contenedores de Docker..."
+cd ~/Prestashop
 docker-compose up -d
 
-# Programar la actualización de los contenedores para los lunes a las 05:00
 echo "Programando la actualización de los contenedores..."
-(crontab -l ; echo "0 5 * * 1 cd $(pwd) && docker-compose pull && docker-compose up -d") | crontab -
+(crontab -l ; echo "0 5 * * 1 ~/Prestashop/scripts/update_containers.sh") | crontab -
 
-# Programar el respaldo de la base de datos para todos los días a las 23:55
 echo "Programando el respaldo de la base de datos..."
-(crontab -l ; echo "55 23 * * * docker exec prestashop_db_1 /usr/bin/mysqldump -u root --password=rootpassword database > $(pwd)/backup.sql") | crontab -
+(crontab -l ; echo "55 23 * * * ~/Prestashop/scripts/backup_db.sh") | crontab -
+
+echo "Configuración completada."
+
+cd $orig_dir
