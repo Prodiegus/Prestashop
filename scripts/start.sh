@@ -35,10 +35,12 @@ sudo chmod +x ~/Prestashop/scripts/*
 echo "Cambiando la propiedad de los directorios de los volúmenes..."
 sudo chown -R $USER:$USER ~/Prestashop/data/prestashop
 sudo chown -R $USER:$USER ~/Prestashop/data/prestashop_DB
+sudo chmod 777 ~/Prestashop/data/prestashop
+sudo chmod 777 ~/Prestashop/data/prestashop_DB
 
 if ! docker network ls | grep -q 'prestashop_network'; then
     echo "Creando la red de Docker prestashop_network..."
-    docker network create prestashop_network
+    docker network create prestashop-net
 fi
 
 orig_dir=$(pwd)

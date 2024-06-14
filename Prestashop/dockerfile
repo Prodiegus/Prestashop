@@ -1,12 +1,13 @@
-FROM prestashop/prestashop:latest
+FROM prestashop/prestashop:1.7
 
-ENV DB_SERVER=db:3306
+ENV DB_SERVER=db
+ENV DB_USER=root
+ENV DB_PASSWD=password
+ENV DB_PREFIX=ps_
 ENV DB_NAME=prestashop
-ENV DB_USER=prestashopuser
-ENV DB_PASSWORD=password
-ENV PS_INSTALL_AUTO=1
-ENV PS_ERASE_DB=1
-ENV PS_FOLDER_ADMIN=admin
-ENV PS_FOLDER_INSTALL=install
+ENV PS_LANGUAGE=es 
+ENV PS_COUNTRY=CL
+ENV ADMIN_MAIL=ddfernandezvap@gmail.com
+ENV ADMIN_PASSWD=password
 
 EXPOSE 80

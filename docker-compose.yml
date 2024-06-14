@@ -1,11 +1,15 @@
-version: '3.1'
+version: '3.9'
 services:
   db:
     build:
       context: ./mysql/
       dockerfile: dockerfile
+    container_name: prestashop-db
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./data/prestashop_DB:/var/lib/mysql
+    ports:
+      - 3306:3306
     restart: always
     networks:
       - prestashop_network
@@ -14,16 +18,18 @@ services:
     build:
       context: ./Prestashop/
       dockerfile: dockerfile
+    container_name: prestashop
     volumes:
       - ./data/prestashop:/var/www/html
     depends_on:
       - db
     ports:
-      - 80:80
+      - 8080:80
     restart: always
     networks:
       - prestashop_network
 
 networks:
   prestashop_network:
+    driver: bridge
     external: true
