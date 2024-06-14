@@ -47,8 +47,7 @@ orig_dir=$(pwd)
 
 echo "Iniciando contenedores de Docker..."
 cd ~/Prestashop
-sudo docker-compose up -d
-
+sudo docker-compose pull && sudo docker-compose down  && sudo docker-compose up --build  -d
 echo "Programando la actualización de los contenedores..."
 sudo (crontab -l ; echo "0 5 * * 1 ~/Prestashop/scripts/update_containers.sh") | crontab -
 
