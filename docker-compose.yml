@@ -24,7 +24,7 @@ services:
     depends_on:
       - db
     ports:
-      - 80:80
+      - 443:443
     restart: always
     networks:
       - prestashop_network

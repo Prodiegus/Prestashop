@@ -10,4 +10,14 @@ ENV PS_COUNTRY=CL
 ENV ADMIN_MAIL=ddfernandezvap@gmail.com
 ENV ADMIN_PASSWD=password
 
-EXPOSE 80
+COPY mycert.crt /etc/ssl/certs/mycert.crt
+COPY mykey.key /etc/ssl/private/mykey.key
+
+RUN a2enmod ssl && \
+    a2ensite default-ssl && \
+    sed -i \
+    -e 's|SSLCertificateFile.*|SSLCertificateFile /etc/ssl/certs/mycert.crt|g' \
+    -e 's|SSLCertificateKeyFile.*|SSLCertificateKeyFile /etc/ssl/private/mykey.key|g' \
+    /etc/apache2/sites-available/default-ssl.conf
+    
+EXPOSE 443
